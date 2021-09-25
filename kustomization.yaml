@@ -1,0 +1,7 @@
+metadata:
+  name: kusto-me
+commonLabels:
+  app: kusto-me
+resources:
+- deployment.yml
+- service.yaml
