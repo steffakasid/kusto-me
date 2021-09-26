@@ -54,6 +54,9 @@ func main() {
 	)
 
 	if folder != "" {
+		if _, err := os.Stat(folder); err != nil {
+			panic(err)
+		}
 		pwd = folder
 	} else {
 		pwd, err = os.Getwd()
@@ -101,7 +104,11 @@ func main() {
 			}
 		}
 	}
-	kustomization := BaseKustomization(path.Base(pwd), files)
+	appName := path.Base(pwd)
+	if name != "" {
+		appName = name
+	}
+	kustomization := BaseKustomization(appName, files)
 	err = WriteYaml(kustomization, baseKustomize)
 	if err != nil {
 		panic(err)
