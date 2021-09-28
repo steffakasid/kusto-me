@@ -1,41 +1,29 @@
 package main
 
 import (
-	"flag"
 	"os"
 	"path"
-	"strings"
 
+	flag "github.com/spf13/pflag"
 	"github.com/steffakasid/kusto-me/internal"
 	"github.com/steffakasid/kusto-me/pkg"
 )
 
-type stringArrFlag []string
-
 var (
 	overlay                   bool
 	name, folder              string
-	overlayDir, defaultLabels stringArrFlag
+	overlayDir, defaultLabels []string
 )
 
 var defaultOverlays = []string{"development", "production"}
 
 func init() {
-	flag.BoolVar(&overlay, "overlay", false, "Defines if overlay structure should be created or just a simple project")
-	flag.StringVar(&name, "name", "", "Set the projectname. If not set the current directoryname is used")
-	flag.StringVar(&folder, "folder", "", "Set the folder to create kustomize project. If not set current dir is used.")
-	flag.Var(&overlayDir, "dir", "Define overlay directories to be used.")
-	flag.Var(&defaultLabels, "label", "Add default labels to kustomization.yml. Format: <key>:<value>")
+	flag.BoolVarP(&overlay, "overlay", "o", false, "Defines if overlay structure should be created or just a simple project")
+	flag.StringVarP(&name, "name", "n", "", "Set the projectname. If not set the current directoryname is used")
+	flag.StringVarP(&folder, "folder", "f", "", "Set the folder to create kustomize project. If not set current dir is used.")
+	flag.StringArrayVarP(&overlayDir, "dir", "d", []string{}, "Define overlay directories to be used.")
+	flag.StringArrayVarP(&defaultLabels, "label", "l", []string{}, "Add default labels to kustomization.yml. Format: <key>:<value>")
 	flag.Parse()
-}
-
-func (s *stringArrFlag) String() string {
-	return strings.Join(*s, ",")
-}
-
-func (s *stringArrFlag) Set(value string) error {
-	*s = append(*s, value)
-	return nil
 }
 
 func main() {
@@ -75,5 +63,4 @@ func main() {
 	}
 
 	kustoMe.KustomizeMe(overlay)
-
 }
