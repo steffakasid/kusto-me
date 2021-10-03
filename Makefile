@@ -34,7 +34,8 @@ install: ## build locally and copy bin into $(GOROOT)/bin
 	$(GOBUILD) -o $(GOBIN)/$(BINARY_NAME) -ldflags "-X main.version=$(VERSION)"
 
 binary: ## build the binary
-	CGO_ENABLED=0 GOOS=linux $(GOBUILD) -a -o build/$(BINARY_NAME) -installsuffix cgo -ldflags "-X main.version=$(VERSION)"
+	$(GOCLEAN)
+	@GOOS=${GOOS} GOARCH=${GOARCH} $(GOBUILD) -a -o $(BINARY_NAME) -ldflags "-X main.version=$(VERSION)"
 
 build-all:
 	$(GOCLEAN)
