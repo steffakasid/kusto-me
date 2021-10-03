@@ -1,5 +1,5 @@
 ---
-name: Go
+name: Go Build
 
 on:
   push:
@@ -21,6 +21,3 @@ jobs:
 
     - name: Build
       run: make build
-
-    - name: Test
-      run: make test
