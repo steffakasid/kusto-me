@@ -1,5 +1,6 @@
-# kusto-me
-[![Go](https://github.com/steffakasid/kusto-me/actions/workflows/go.yml/badge.svg)](https://github.com/steffakasid/kusto-me/actions/workflows/go.yml)
+# kusto-me 
+[![Go Build](https://github.com/steffakasid/kusto-me/actions/workflows/go-build.yml/badge.svg)](https://github.com/steffakasid/kusto-me/actions/workflows/go-build.yml) [![Go Test](https://github.com/steffakasid/kusto-me/actions/workflows/go-test.yml/badge.svg)](https://github.com/steffakasid/kusto-me/actions/workflows/go-test.yml)
+
 
 kusto-me (kustomize me) can be used to initalize folders with k8s objects with a kustomize.yaml and optional with a overlay folder structure.
 
