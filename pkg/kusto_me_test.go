@@ -28,7 +28,7 @@ func TestKustomizeMeSimple(t *testing.T) {
 	assert.NoError(t, err)
 	expected := &types.Kustomization{
 		MetaData:     &types.ObjectMeta{Name: to.ApplicationName},
-		CommonLabels: map[string]string{"app": to.ApplicationName, "label1": "value"},
+		CommonLabels: map[string]string{"github.com.steffakasid.kusto-me/app": to.ApplicationName, "label1": "value"},
 		Resources:    to.ApplicationFiles,
 	}
 	assert.Equal(t, expected, kustomization)

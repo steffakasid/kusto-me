@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	labelKeyApp     = "app"
+	labelKeyApp     = "github.com.steffakasid.kusto-me/app"
 	labelKeyVariant = "variant"
 )
 
