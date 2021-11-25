@@ -1,11 +1,13 @@
 package pkg
 
 import (
+	"fmt"
 	"os"
 	"path"
 	"strings"
 
 	"github.com/steffakasid/kusto-me/internal"
+	"gopkg.in/yaml.v2"
 	"sigs.k8s.io/kustomize/api/types"
 )
 
@@ -25,8 +27,15 @@ type KustoMe struct {
 }
 
 func (k KustoMe) KustomizeMe(overlay bool) {
-	meta := &types.ObjectMeta{Name: k.ApplicationName}
-	// TODO: Check if kustomization.yml already exists and read it in (maybe controlled by flag)
+	targetPath := path.Join(k.ApplicationRootFolder, internal.KustomizationFilename)
+	kustomization := k.init(targetPath)
+
+	meta := kustomization.MetaData
+	if meta == nil {
+		meta = &types.ObjectMeta{}
+	}
+	meta.Name = k.ApplicationName
+
 	commonLabels := map[string]string{labelKeyApp: k.ApplicationName}
 	if len(k.ApplicationDefaultLabels) > 0 {
 		for _, l := range k.ApplicationDefaultLabels {
@@ -35,13 +44,9 @@ func (k KustoMe) KustomizeMe(overlay bool) {
 		}
 	}
 
-	kustomization := types.Kustomization{
-		MetaData:     meta,
-		CommonLabels: commonLabels,
-		Resources:    k.ApplicationFiles,
-	}
+	kustomization.CommonLabels = mergeMaps(commonLabels, kustomization.CommonLabels)
+	kustomization.Resources = mergeArrays(k.ApplicationFiles, kustomization.Resources)
 
-	targetPath := path.Join(k.ApplicationRootFolder, internal.KustomizationFilename)
 	if overlay {
 		targetPath = path.Join(k.ApplicationBaseFolder, internal.KustomizationFilename)
 		k.WriteOverlays()
@@ -53,7 +58,23 @@ func (k KustoMe) KustomizeMe(overlay bool) {
 	}
 }
 
+func (k KustoMe) init(filePath string) *types.Kustomization {
+	kustomizationYaml := &types.Kustomization{}
+	if _, err := os.Stat(filePath); err == nil {
+		bt, err := os.ReadFile(filePath)
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = yaml.UnmarshalStrict(bt, kustomizationYaml)
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
+	return kustomizationYaml
+}
+
 func (k KustoMe) WriteOverlays() {
+	// TODO: Check if overlay exists
 	k.initOverlayStructure()
 
 	internal.MoveFiles(k.ApplicationFiles, k.ApplicationRootFolder, k.ApplicationBaseFolder)
