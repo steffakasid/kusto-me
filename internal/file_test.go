@@ -13,7 +13,7 @@ func TestGetFiles(t *testing.T) {
 	files := internal.GetFiles("../test")
 	assert.Contains(t, files, "deployment.yml")
 	assert.Contains(t, files, "service.yaml")
-	assert.Equal(t, 2, len(files))
+	assert.Equal(t, 3, len(files))
 	assert.NotContains(t, files, "something.txt")
 }
 

@@ -1,13 +1,15 @@
 package pkg
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path"
 	"strings"
 
+	"github.com/ghodss/yaml"
 	"github.com/steffakasid/kusto-me/internal"
-	"gopkg.in/yaml.v2"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"sigs.k8s.io/kustomize/api/types"
 )
 
@@ -23,6 +25,7 @@ type KustoMe struct {
 	ApplicationBaseFolder    string
 	ApplicationOverlayFolder string
 	ApplicationFiles         []string
+	CRDs                     []string
 	ApplicationOverlays      []string
 }
 
@@ -35,6 +38,7 @@ func (k KustoMe) KustomizeMe(overlay bool) {
 		meta = &types.ObjectMeta{}
 	}
 	meta.Name = k.ApplicationName
+	kustomization.MetaData = meta
 
 	commonLabels := map[string]string{labelKeyApp: k.ApplicationName}
 	if len(k.ApplicationDefaultLabels) > 0 {
@@ -44,12 +48,15 @@ func (k KustoMe) KustomizeMe(overlay bool) {
 		}
 	}
 
+	k.identifyCRDs()
+
 	kustomization.CommonLabels = mergeMaps(commonLabels, kustomization.CommonLabels)
 	kustomization.Resources = mergeArrays(k.ApplicationFiles, kustomization.Resources)
+	kustomization.Crds = mergeArrays(k.CRDs, kustomization.Crds)
 
 	if overlay {
 		targetPath = path.Join(k.ApplicationBaseFolder, internal.KustomizationFilename)
-		k.WriteOverlays()
+		k.WriteOverlays(*kustomization)
 	}
 
 	err := internal.WriteYaml(kustomization, targetPath)
@@ -64,16 +71,40 @@ func (k KustoMe) init(filePath string) *types.Kustomization {
 		bt, err := os.ReadFile(filePath)
 		if err != nil {
 			fmt.Println(err)
-		}
-		err = yaml.UnmarshalStrict(bt, kustomizationYaml)
-		if err != nil {
-			fmt.Println(err)
+		} else {
+			err = yaml.Unmarshal(bt, kustomizationYaml)
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	}
 	return kustomizationYaml
 }
 
-func (k KustoMe) WriteOverlays() {
+func (k *KustoMe) identifyCRDs() {
+	for _, file := range k.ApplicationFiles {
+		bt, err := os.ReadFile(path.Join(k.ApplicationRootFolder, file))
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			crds := &apiextensionsv1.CustomResourceDefinition{}
+			jsonbt, err := yaml.YAMLToJSON(bt)
+			if err != nil {
+				fmt.Println(err)
+			}
+			err = json.Unmarshal(jsonbt, crds)
+			if err != nil {
+				fmt.Println(err)
+			}
+			if crds.Kind == "CustomResourceDefinition" {
+				k.CRDs = appendStrings(k.CRDs, file)
+				k.ApplicationFiles = removeFromArray(k.ApplicationFiles, file)
+			}
+		}
+	}
+}
+
+func (k KustoMe) WriteOverlays(base types.Kustomization) {
 	// TODO: Check if overlay exists
 	k.initOverlayStructure()
 
@@ -83,7 +114,7 @@ func (k KustoMe) WriteOverlays() {
 		if err := internal.CreatePath(o, k.ApplicationOverlayFolder); err != nil {
 			panic(err)
 		}
-		kustomization := k.CreateOverlay(o)
+		kustomization := k.CreateOverlay(o, base)
 		if err := internal.WriteYaml(kustomization, path.Join(k.ApplicationOverlayFolder, o, internal.KustomizationFilename)); err != nil {
 			panic(err)
 		}
@@ -99,14 +130,23 @@ func (k KustoMe) initOverlayStructure() {
 	}
 }
 
-func (k KustoMe) CreateOverlay(name string) types.Kustomization {
-	return types.Kustomization{
+func (k KustoMe) CreateOverlay(name string, base types.Kustomization) types.Kustomization {
+	// TODO: Needs tests
+	overlay := types.Kustomization{
 		NamePrefix: name[0:3] + "-",
 		CommonLabels: map[string]string{
 			labelKeyVariant: name,
 		},
-		Bases: []string{
-			path.Join("../../", internal.KustomizationBase),
-		},
+		Resources: []string{},
+		Crds:      []string{},
 	}
+
+	for _, res := range base.Resources {
+		overlay.Resources = append(overlay.Resources, path.Join("../../", internal.KustomizationBase, res))
+	}
+	for _, crd := range base.Crds {
+		overlay.Crds = append(overlay.Crds, path.Join("../../", internal.KustomizationBase, crd))
+	}
+
+	return overlay
 }

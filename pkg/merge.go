@@ -1,6 +1,9 @@
 package pkg
 
 func mergeMaps(src, target map[string]string) map[string]string {
+	if target == nil {
+		target = map[string]string{}
+	}
 	for key, value := range src {
 		target[key] = value
 	}
@@ -8,6 +11,9 @@ func mergeMaps(src, target map[string]string) map[string]string {
 }
 
 func mergeArrays(src, target []string) []string {
+	if target == nil {
+		target = []string{}
+	}
 	for _, value := range src {
 		if !contains(target, value) {
 			target = append(target, value)
@@ -23,4 +29,11 @@ func contains(arr []string, entry string) bool {
 		}
 	}
 	return false
+}
+
+func appendStrings(arr []string, elems ...string) []string {
+	if arr == nil {
+		arr = []string{}
+	}
+	return append(arr, elems...)
 }
