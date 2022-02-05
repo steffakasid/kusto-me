@@ -16,8 +16,7 @@ kusto-me (kustomize me) can be used to initalize folders with k8s objects with a
 ## Install
 
 On OSX/ Linux you may just use brew to install kusto-me:
-[source,sh]
-----
+```
  brew tap steffakasid/kusto-me
- brew install steffakasid/kusto-me
-----
+ brew install kustome
+```
