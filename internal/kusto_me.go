@@ -1,4 +1,4 @@
-package pkg
+package internal
 
 import (
 	"encoding/json"
@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/ghodss/yaml"
-	"github.com/steffakasid/kusto-me/internal"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"sigs.k8s.io/kustomize/api/types"
 )
@@ -30,7 +29,7 @@ type KustoMe struct {
 }
 
 func (k KustoMe) KustomizeMe(overlay bool) {
-	targetPath := path.Join(k.ApplicationRootFolder, internal.KustomizationFilename)
+	targetPath := path.Join(k.ApplicationRootFolder, KustomizationFilename)
 	kustomization := k.init(targetPath)
 
 	meta := kustomization.MetaData
@@ -55,11 +54,11 @@ func (k KustoMe) KustomizeMe(overlay bool) {
 	kustomization.Crds = mergeArrays(k.CRDs, kustomization.Crds)
 
 	if overlay {
-		targetPath = path.Join(k.ApplicationBaseFolder, internal.KustomizationFilename)
+		targetPath = path.Join(k.ApplicationBaseFolder, KustomizationFilename)
 		k.WriteOverlays(*kustomization)
 	}
 
-	err := internal.WriteYaml(kustomization, targetPath)
+	err := WriteYaml(kustomization, targetPath)
 	if err != nil {
 		panic(err)
 	}
@@ -108,24 +107,24 @@ func (k KustoMe) WriteOverlays(base types.Kustomization) {
 	// TODO: Check if overlay exists
 	k.initOverlayStructure()
 
-	internal.MoveFiles(k.ApplicationFiles, k.ApplicationRootFolder, k.ApplicationBaseFolder)
+	MoveFiles(k.ApplicationFiles, k.ApplicationRootFolder, k.ApplicationBaseFolder)
 
 	for _, o := range k.ApplicationOverlays {
-		if err := internal.CreatePath(o, k.ApplicationOverlayFolder); err != nil {
+		if err := CreatePath(o, k.ApplicationOverlayFolder); err != nil {
 			panic(err)
 		}
 		kustomization := k.CreateOverlay(o, base)
-		if err := internal.WriteYaml(kustomization, path.Join(k.ApplicationOverlayFolder, o, internal.KustomizationFilename)); err != nil {
+		if err := WriteYaml(kustomization, path.Join(k.ApplicationOverlayFolder, o, KustomizationFilename)); err != nil {
 			panic(err)
 		}
 	}
 }
 
 func (k KustoMe) initOverlayStructure() {
-	if err := os.Mkdir(k.ApplicationBaseFolder, internal.Permissions); err != nil {
+	if err := os.Mkdir(k.ApplicationBaseFolder, Permissions); err != nil {
 		panic(err)
 	}
-	if err := os.Mkdir(k.ApplicationOverlayFolder, internal.Permissions); err != nil {
+	if err := os.Mkdir(k.ApplicationOverlayFolder, Permissions); err != nil {
 		panic(err)
 	}
 }
@@ -142,10 +141,10 @@ func (k KustoMe) CreateOverlay(name string, base types.Kustomization) types.Kust
 	}
 
 	for _, res := range base.Resources {
-		overlay.Resources = append(overlay.Resources, path.Join("../../", internal.KustomizationBase, res))
+		overlay.Resources = append(overlay.Resources, path.Join("../../", KustomizationBase, res))
 	}
 	for _, crd := range base.Crds {
-		overlay.Crds = append(overlay.Crds, path.Join("../../", internal.KustomizationBase, crd))
+		overlay.Crds = append(overlay.Crds, path.Join("../../", KustomizationBase, crd))
 	}
 
 	return overlay

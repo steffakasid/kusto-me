@@ -6,7 +6,6 @@ import (
 
 	flag "github.com/spf13/pflag"
 	"github.com/steffakasid/kusto-me/internal"
-	"github.com/steffakasid/kusto-me/pkg"
 )
 
 var (
@@ -48,7 +47,7 @@ func main() {
 		appName = name
 	}
 
-	kustoMe := pkg.KustoMe{
+	kustoMe := internal.KustoMe{
 		ApplicationName:          appName,
 		ApplicationRootFolder:    pwd,
 		ApplicationBaseFolder:    path.Join(pwd, internal.KustomizationBase),

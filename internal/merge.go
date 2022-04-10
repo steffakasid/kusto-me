@@ -1,4 +1,4 @@
-package pkg
+package internal
 
 func mergeMaps(src, target map[string]string) map[string]string {
 	if target == nil {

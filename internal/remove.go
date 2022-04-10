@@ -1,4 +1,4 @@
-package pkg
+package internal
 
 func removeFromArray(arr []string, elem string) []string {
 	a := []string{}

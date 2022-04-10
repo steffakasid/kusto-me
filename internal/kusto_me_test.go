@@ -1,4 +1,4 @@
-package pkg_test
+package internal_test
 
 import (
 	"os"
@@ -6,14 +6,13 @@ import (
 	"testing"
 
 	"github.com/steffakasid/kusto-me/internal"
-	"github.com/steffakasid/kusto-me/pkg"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v2"
 	"sigs.k8s.io/kustomize/api/types"
 )
 
 func TestKustomizeMeSimple(t *testing.T) {
-	to := pkg.KustoMe{
+	to := internal.KustoMe{
 		ApplicationName:          "UnitTest",
 		ApplicationDefaultLabels: []string{"label1:value"},
 		ApplicationRootFolder:    "../test",
