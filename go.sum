@@ -1058,6 +1058,8 @@ sigs.k8s.io/kustomize/api v0.12.1 h1:7YM7gW3kYBwtKvoY216ZzY+8hM+lV53LUayghNRJ0vM
 sigs.k8s.io/kustomize/api v0.12.1/go.mod h1:y3JUhimkZkR6sbLNwfJHxvo1TCLwuwm14sCYnkH6S1s=
 sigs.k8s.io/kustomize/api v0.13.0 h1:jejV1ThpYY/HQ0FR/VvIMi6zBtIQ+/fvMXJtnpFfZZI=
 sigs.k8s.io/kustomize/api v0.13.0/go.mod h1:KDhwElNK4jxc2/cEpFQOnYT/72t+ET7yeasogV89ow4=
+sigs.k8s.io/kustomize/api v0.13.1 h1:2jLAM6w5nGznnQgq2V0YUMFGtAixD2SO8Q+f5B9Un9U=
+sigs.k8s.io/kustomize/api v0.13.1/go.mod h1:KDhwElNK4jxc2/cEpFQOnYT/72t+ET7yeasogV89ow4=
 sigs.k8s.io/kustomize/kyaml v0.13.7 h1:/EZ/nPaLUzeJKF/BuJ4QCuMVJWiEVoI8iftOHY3g3tk=
 sigs.k8s.io/kustomize/kyaml v0.13.7/go.mod h1:6K+IUOuir3Y7nucPRAjw9yth04KSWBnP5pqUTGwj/qU=
 sigs.k8s.io/kustomize/kyaml v0.13.9 h1:Qz53EAaFFANyNgyOEJbT/yoIHygK40/ZcvU3rgry2Tk=
