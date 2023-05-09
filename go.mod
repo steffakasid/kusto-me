@@ -9,7 +9,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/apiextensions-apiserver v0.27.1
-	sigs.k8s.io/kustomize/api v0.13.3
+	sigs.k8s.io/kustomize/api v0.13.4
 )
 
 require (
