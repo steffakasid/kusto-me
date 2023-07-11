@@ -7,7 +7,7 @@ import (
 
 	"github.com/steffakasid/kusto-me/internal"
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 	"sigs.k8s.io/kustomize/api/types"
 )
 
