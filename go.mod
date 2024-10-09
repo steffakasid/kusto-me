@@ -1,6 +1,8 @@
 module github.com/steffakasid/kusto-me
 
-go 1.22.2
+go 1.22.7
+
+toolchain go1.23.2
 
 require (
 	github.com/ghodss/yaml v1.0.0
@@ -8,7 +10,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/apiextensions-apiserver v0.31.1
-	sigs.k8s.io/kustomize/api v0.17.3
+	sigs.k8s.io/kustomize/api v0.18.0
 )
 
 require (
@@ -41,7 +43,7 @@ require (
 	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340 // indirect
 	k8s.io/utils v0.0.0-20240711033017-18e509b52bc8 // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
-	sigs.k8s.io/kustomize/kyaml v0.17.2 // indirect
+	sigs.k8s.io/kustomize/kyaml v0.18.1 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
