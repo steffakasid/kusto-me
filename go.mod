@@ -2,7 +2,7 @@ module github.com/steffakasid/kusto-me
 
 go 1.22.7
 
-toolchain go1.23.2
+toolchain go1.23.3
 
 require (
 	github.com/ghodss/yaml v1.0.0
