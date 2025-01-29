@@ -6,7 +6,7 @@ toolchain go1.23.5
 
 require (
 	github.com/ghodss/yaml v1.0.0
-	github.com/spf13/pflag v1.0.5
+	github.com/spf13/pflag v1.0.6
 	github.com/stretchr/testify v1.10.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/apiextensions-apiserver v0.32.1
